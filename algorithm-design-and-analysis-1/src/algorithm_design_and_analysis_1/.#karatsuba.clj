@@ -1,1 +1,0 @@
-jumar@Jurajs-MacBook-Pro.1808
