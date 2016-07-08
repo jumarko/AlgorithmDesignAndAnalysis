@@ -7,8 +7,8 @@ package com.github.jumarko.algorithm1;
  */
 public class ArrayInversions {
 
-    public static int countInversionsNaive(int[] numbers) {
-        int inversionsCount = 0;
+    public static long countInversionsNaive(int[] numbers) {
+        long inversionsCount = 0;
         for (int i = 0; i < numbers.length; i++) {
             for (int j = i + 1; j < numbers.length; j++) {
                 if (numbers[i] > numbers[j]) {
@@ -19,7 +19,7 @@ public class ArrayInversions {
         return inversionsCount;
     }
 
-    public static int countInversions(int[] numbers) {
+    public static long countInversions(int[] numbers) {
         return countAllInversions(numbers).count;
     }
 
@@ -83,10 +83,10 @@ public class ArrayInversions {
     }
 
     private static class InversionsResult {
-        final int count;
+        final long count;
         final int[] sortedItems;
 
-        private InversionsResult(int count, int[] sortedItems) {
+        private InversionsResult(long count, int[] sortedItems) {
             this.count = count;
             this.sortedItems = sortedItems;
         }
