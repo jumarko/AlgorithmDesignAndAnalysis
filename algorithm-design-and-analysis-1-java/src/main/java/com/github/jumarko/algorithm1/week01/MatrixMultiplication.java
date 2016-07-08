@@ -40,12 +40,16 @@ public class MatrixMultiplication {
      * between them.
      */
     public static int[][] multiplyStrassen(int[][] a, int[][] b) {
-        // TODO: implement
+        checkDimensions(a, b);
         return null;
     }
 
 
     private static void checkDimensions(int[][] a, int[][] b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException("Matrices cannot be null");
+        }
+
         if (a.length != b.length) {
             throw new IllegalArgumentException("Matrices must have the same number of rows: a.length=" + a.length +
                     ", but b.length=" + b.length);
