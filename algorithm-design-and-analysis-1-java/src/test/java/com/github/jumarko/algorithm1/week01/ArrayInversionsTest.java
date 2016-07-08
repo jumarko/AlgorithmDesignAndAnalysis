@@ -1,7 +1,7 @@
-package com.github.jumarko.algorithm1;
+package com.github.jumarko.algorithm1.week01;
 
-import static com.github.jumarko.algorithm1.ArrayInversions.countInversions;
-import static com.github.jumarko.algorithm1.ArrayInversions.countInversionsNaive;
+import static com.github.jumarko.algorithm1.week01.ArrayInversions.countInversions;
+import static com.github.jumarko.algorithm1.week01.ArrayInversions.countInversionsNaive;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 

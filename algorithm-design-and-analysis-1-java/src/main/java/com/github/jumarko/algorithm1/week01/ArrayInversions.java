@@ -1,4 +1,4 @@
-package com.github.jumarko.algorithm1;
+package com.github.jumarko.algorithm1.week01;
 
 
 /**
