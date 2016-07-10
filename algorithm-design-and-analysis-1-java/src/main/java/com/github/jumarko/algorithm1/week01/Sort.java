@@ -29,4 +29,27 @@ public class Sort {
 
         return sortedNumbers;
     }
+
+    public static int[] insertionSort(int[] numbers) {
+        if (numbers.length < 2) {
+            return numbers;
+        }
+        for (int i = 1; i < numbers.length; i++) {
+            int current = numbers[i];
+            // check all previous elements (which should be partially sorted) and continue swapping
+            // while current is smaller than previous element
+            int j = i - 1;
+            int previous = numbers[j];
+            while (current < previous) {
+                numbers[j] = current;
+                numbers[j+1] = previous;
+                j--;
+                if (j < 0) {
+                    break;
+                }
+                previous = numbers[j];
+            }
+        }
+        return numbers;
+    }
 }
