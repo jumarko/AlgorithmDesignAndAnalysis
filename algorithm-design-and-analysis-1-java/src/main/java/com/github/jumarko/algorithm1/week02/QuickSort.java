@@ -1,16 +1,43 @@
 package com.github.jumarko.algorithm1.week02;
 
+import java.util.Arrays;
+
 /**
  * QuickSort implementation according to lecture videos.
  * Check https://www.coursera.org/learn/algorithm-design-analysis/lecture/Zt0Ti/quicksort-overview
+ *
+ * Some test cases can also be found at: https://www.coursera.org/learn/algorithm-design-analysis/discussions/weeks/2/threads/lKD8kzJBEeaHEgowKm82Aw
+ *
+ * - https://dl.dropboxusercontent.com/u/20888180/AlgI_wk2_testcases/10.txt
+ *   expected comparisons counts:
+ *   - first: 25
+ *   - last: 29
+ *   - median: 21
+ *
+ * - https://dl.dropboxusercontent.com/u/20888180/AlgI_wk2_testcases/100.txt
+ *   expected comparisons counts:
+ *   - first: 615
+ *   - last: 587
+ *   - median: 518
+ *
+ * - https://dl.dropboxusercontent.com/u/20888180/AlgI_wk2_testcases/1000.txt
+ *   expected comparisons counts:
+ *   - first: 10297
+ *   - last: 10184
+ *   - median: 8921
+ *
+ * Check unit tests!
  */
 public class QuickSort {
 
     /**
      * Sorts given array of integers in place, thus modifying original array.
+     * @return total number of comparisons made by this quicksort implementation
      */
-    public static void sort(int[] a) {
-        sortChoosingFirstElementAsPivot(a, 0, a.length - 1);
+    public static int sort(int[] a) {
+//        return sortChoosingFirstElementAsPivot(a, 0, a.length - 1);
+//        return sortChoosingLastElementAsPivot(a, 0, a.length - 1);
+        return sortChoosingMedianOfThreeAsPivot(a, 0, a.length - 1);
     }
 
     /**
@@ -20,31 +47,111 @@ public class QuickSort {
      * @param a array of distinct numbers
      * @param start index of the first element of array that should be sorted by this recursive call
      * @param end index of the last element of array that should be sorted by this recursive call
+     *
+     * @return total number of comparisons made by this quicksort implementation
      */
-    private static void sortChoosingFirstElementAsPivot(int[] a, int start, int end) {
+    static int sortChoosingFirstElementAsPivot(int[] a, int start, int end) {
+
         if (end - start < 1) {
             // array of length smaller than two
-            return;
+            return 0;
         }
 
+        int totalComparisonsCount = end - start;
+
         final int pivotIndex = partition(a, start, end);
+
 
         // recursive calls
         // Note there's no Combine step - the array is already sorted when recursive calls return
 
         // sort all elements lower than pivot
-        sortChoosingFirstElementAsPivot(a, start, pivotIndex - 1);
+        totalComparisonsCount += sortChoosingFirstElementAsPivot(a, start, pivotIndex - 1);
+
 
         // sort all elements greater than pivot
-        sortChoosingFirstElementAsPivot(a, pivotIndex + 1, end);
+        totalComparisonsCount += sortChoosingFirstElementAsPivot(a, pivotIndex + 1, end);
+
+        return totalComparisonsCount;
     }
 
-    private static void sortChoosingLastElementAsPivot(int[] a, int start, int end) {
-        // TODO: implement me
+    static int sortChoosingLastElementAsPivot(int[] a, int start, int end) {
+        if (end - start < 1) {
+            // array of length smaller than two
+            return 0;
+        }
+
+        int totalComparisonsCount = end - start;
+
+        // since we want to choose last element as a pivot, we need to exchange it with the first element of array
+        int lastElement = a[end];
+        a[end] = a[start];
+        a[start] = lastElement;
+
+        final int pivotIndex = partition(a, start, end);
+
+
+        // recursive calls
+        // Note there's no Combine step - the array is already sorted when recursive calls return
+
+        // sort all elements lower than pivot
+        totalComparisonsCount += sortChoosingLastElementAsPivot(a, start, pivotIndex - 1);
+
+
+        // sort all elements greater than pivot
+        totalComparisonsCount += sortChoosingLastElementAsPivot(a, pivotIndex + 1, end);
+
+        return totalComparisonsCount;
     }
 
-    private static void sortUsingMedianOfThreePivotRule(int[] a, int start, int end) {
-        // TODO: implement me
+    static int sortChoosingMedianOfThreeAsPivot(int[] a, int start, int end) {
+        if (end - start < 1) {
+            // array of length smaller than two
+            return 0;
+        }
+
+        int totalComparisonsCount = end - start;
+
+        // find median of three: first element, middle element and last element
+        // for arrays of even length 2*k, the middle element is the item at position "k"
+        int first = a[start];
+        int last = a[end];
+        final int middleIndex = start + ((end - start) / 2);
+        int middle = a[middleIndex];
+
+        int[] medianArray = new int[3];
+        medianArray[0] = first;
+        medianArray[1] = middle;
+        medianArray[2] = last;
+        Arrays.sort(medianArray);
+
+        if (medianArray[1] == first) {
+            // the first element is already a pivot, don't need to do anything
+        } else if (medianArray[1] == middle) {
+            // the middle element is pivot, swap it with first element
+            a[start] = middle;
+            a[middleIndex] = first;
+        } else if (medianArray[1] == last) {
+            // the last element is pivot, swap it with first element
+            a[start] = last;
+            a[end] = first;
+        }
+
+
+        final int pivotIndex = partition(a, start, end);
+
+
+        // recursive calls
+        // Note there's no Combine step - the array is already sorted when recursive calls return
+
+        // sort all elements lower than pivot
+        totalComparisonsCount += sortChoosingMedianOfThreeAsPivot(a, start, pivotIndex - 1);
+
+
+        // sort all elements greater than pivot
+        totalComparisonsCount += sortChoosingMedianOfThreeAsPivot(a, pivotIndex + 1, end);
+
+        return totalComparisonsCount;
     }
 
     /**
