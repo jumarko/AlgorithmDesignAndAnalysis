@@ -24,7 +24,7 @@ public class QuickSortTest {
     public void quickSortSingleElement() {
         final int[] a = {5};
         QuickSort.sort(a);
-        assertThat(a, is(new int[] {1}));
+        assertThat(a, is(new int[] {5}));
     }
 
     @Test
