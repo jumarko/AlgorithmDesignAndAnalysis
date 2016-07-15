@@ -141,7 +141,7 @@ public class QuickSortTest {
 
     private static void sortAndCheckArrayFromResource(int arrayLength, String resourceName,
                                                       int expectedComparisonsCount,
-                                                      SortFunction sortFunction) {
+                                                      QuickSort.SortFunction sortFunction) {
         final int[] a;
         try {
             a = readArrayFromResource(arrayLength, resourceName);
@@ -172,7 +172,4 @@ public class QuickSortTest {
         return a;
     }
 
-    private interface SortFunction {
-        int apply(int[] array, int start, int end);
-    }
 }

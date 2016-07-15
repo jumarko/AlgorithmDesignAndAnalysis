@@ -51,69 +51,34 @@ public class QuickSort {
      * @return total number of comparisons made by this quicksort implementation
      */
     static int sortChoosingFirstElementAsPivot(int[] a, int start, int end) {
-
-        if (end - start < 1) {
-            // array of length smaller than two
-            return 0;
-        }
-
-        int totalComparisonsCount = end - start;
-
-        final int pivotIndex = partition(a, start, end);
-
-
-        // recursive calls
-        // Note there's no Combine step - the array is already sorted when recursive calls return
-
-        // sort all elements lower than pivot
-        totalComparisonsCount += sortChoosingFirstElementAsPivot(a, start, pivotIndex - 1);
-
-
-        // sort all elements greater than pivot
-        totalComparisonsCount += sortChoosingFirstElementAsPivot(a, pivotIndex + 1, end);
-
-        return totalComparisonsCount;
+        return sortUsingPivotStrategy(a, start, end,
+                QuickSort::sortChoosingFirstElementAsPivot,
+                // since pivot is already at its place, we don't need to swap anything
+                (a1, start1, end1) -> 0);
     }
 
     static int sortChoosingLastElementAsPivot(int[] a, int start, int end) {
-        if (end - start < 1) {
-            // array of length smaller than two
-            return 0;
-        }
+        return sortUsingPivotStrategy(a, start, end,
+                QuickSort::sortChoosingLastElementAsPivot,
+                QuickSort::useLastElementAsPivot);
+    }
 
-        int totalComparisonsCount = end - start;
-
-        // since we want to choose last element as a pivot, we need to exchange it with the first element of array
+    private static int useLastElementAsPivot(int[] a, int start, int end) {
         int lastElement = a[end];
         a[end] = a[start];
         a[start] = lastElement;
 
-        final int pivotIndex = partition(a, start, end);
-
-
-        // recursive calls
-        // Note there's no Combine step - the array is already sorted when recursive calls return
-
-        // sort all elements lower than pivot
-        totalComparisonsCount += sortChoosingLastElementAsPivot(a, start, pivotIndex - 1);
-
-
-        // sort all elements greater than pivot
-        totalComparisonsCount += sortChoosingLastElementAsPivot(a, pivotIndex + 1, end);
-
-        return totalComparisonsCount;
+        // doesn't mean anything -> just to satisfy interface
+        return 0;
     }
 
     static int sortChoosingMedianOfThreeAsPivot(int[] a, int start, int end) {
-        if (end - start < 1) {
-            // array of length smaller than two
-            return 0;
-        }
+        return sortUsingPivotStrategy(a, start, end,
+                QuickSort::sortChoosingMedianOfThreeAsPivot,
+                QuickSort::useMedianOfThreeAsPivot);
+    }
 
-        int totalComparisonsCount = end - start;
-
-        // find median of three: first element, middle element and last element
-        // for arrays of even length 2*k, the middle element is the item at position "k"
+    private static int useMedianOfThreeAsPivot(int[] a, int start, int end) {
         int first = a[start];
         int last = a[end];
         final int middleIndex = start + ((end - start) / 2);
@@ -137,6 +102,23 @@ public class QuickSort {
             a[end] = first;
         }
 
+        // doesn't mean anything -> just to satisfy interface
+        return 0;
+    }
+
+
+
+    private static int sortUsingPivotStrategy(int[] a, int start, int end, SortFunction sortFunction,
+                                              SortFunction swapPivotWithFirstElementFunction) {
+        if (end - start < 1) {
+            // array of length smaller than two
+            return 0;
+        }
+
+        int totalComparisonsCount = end - start;
+
+        swapPivotWithFirstElementFunction.apply(a, start, end);
+
 
         final int pivotIndex = partition(a, start, end);
 
@@ -145,14 +127,15 @@ public class QuickSort {
         // Note there's no Combine step - the array is already sorted when recursive calls return
 
         // sort all elements lower than pivot
-        totalComparisonsCount += sortChoosingMedianOfThreeAsPivot(a, start, pivotIndex - 1);
+        totalComparisonsCount += sortFunction.apply(a, start, pivotIndex - 1);
 
 
         // sort all elements greater than pivot
-        totalComparisonsCount += sortChoosingMedianOfThreeAsPivot(a, pivotIndex + 1, end);
+        totalComparisonsCount += sortFunction.apply(a, pivotIndex + 1, end);
 
         return totalComparisonsCount;
     }
+
 
     /**
      * Partition given array in such a way that:
@@ -197,5 +180,9 @@ public class QuickSort {
         return i - 1;
     }
 
+
+    interface SortFunction {
+        int apply(int[] array, int start, int end);
+    }
 
 }
